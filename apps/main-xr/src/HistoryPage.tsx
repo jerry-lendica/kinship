@@ -9,11 +9,13 @@
  * Each transcript entry is a glass card via --xr-background-material: translucent.
  */
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import type { TranscriptEntry } from "./VoicePage";
+import SheepCompanion from "./SheepCompanion";
 
 const BROADCAST_CHANNEL = "elevenlabs-transcripts";
 const STORAGE_KEY = "elevenlabs-transcript-history";
+const SHEEP_MODEL_SRC = "/Meshy_AI_model_Animation_Walking_withSkin.glb";
 
 export default function HistoryPage() {
   const [transcripts, setTranscripts] = useState<TranscriptEntry[]>([]);
@@ -46,41 +48,56 @@ export default function HistoryPage() {
 
   return (
     <div className="history-page-root">
-      <div className="history-header" enable-xr>
-        <h2 className="history-title">Transcript History</h2>
-        {transcripts.length > 0 && (
-          <button
-            className="history-clear-btn"
-            onClick={() => {
-              setTranscripts([]);
-              try { localStorage.removeItem(STORAGE_KEY); } catch {}
-            }}
-          >
-            Clear
-          </button>
+      <div className="history-scene-panel">
+        <div className="history-header" enable-xr>
+          <h2 className="history-title">Transcript History</h2>
+          {transcripts.length > 0 && (
+            <button
+              className="history-clear-btn"
+              onClick={() => {
+                setTranscripts([]);
+                try { localStorage.removeItem(STORAGE_KEY); } catch {}
+              }}
+            >
+              Clear
+            </button>
+          )}
+        </div>
+
+        {transcripts.length === 0 ? (
+          <div className="history-empty">
+            <p>Transcripts will appear here</p>
+          </div>
+        ) : (
+          <div ref={feedRef} className="history-feed" enable-xr-monitor>
+            {transcripts.map((t) => (
+              <div key={t.id} enable-xr className="history-card">
+                <span className="history-card-time">
+                  {new Date(t.ts).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit",
+                  })}
+                </span>
+                <p className="history-card-text">{t.text}</p>
+              </div>
+            ))}
+          </div>
         )}
       </div>
 
-      {transcripts.length === 0 ? (
-        <div className="history-empty">
-          <p>Transcripts will appear here</p>
-        </div>
-      ) : (
-        <div ref={feedRef} className="history-feed" enable-xr-monitor>
-          {transcripts.map((t) => (
-            <div key={t.id} enable-xr className="history-card">
-              <span className="history-card-time">
-                {new Date(t.ts).toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  second: "2-digit",
-                })}
-              </span>
-              <p className="history-card-text">{t.text}</p>
-            </div>
-          ))}
-        </div>
-      )}
+      <div
+        enable-xr
+        className="sheep-companion"
+        style={
+          {
+            "--xr-back": "110",
+          } as CSSProperties
+        }
+      >
+        <div className="sheep-companion-label">Walking Companion</div>
+        <SheepCompanion src={SHEEP_MODEL_SRC} />
+      </div>
     </div>
   );
 }

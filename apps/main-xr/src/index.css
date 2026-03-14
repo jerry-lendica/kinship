@@ -381,6 +381,16 @@ html.is-spatial {
   padding: 1.5rem;
   gap: 1rem;
   background: transparent;
+  position: relative;
+}
+
+.history-scene-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex: 1;
+  width: min(100%, 640px);
+  padding-right: min(20rem, 18vw);
 }
 
 /* ── XR TrailerPage layout ───────────────────────────────────────────────── */

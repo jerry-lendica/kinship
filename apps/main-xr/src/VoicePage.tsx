@@ -15,7 +15,6 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { initScene } from "@webspatial/react-sdk";
-import SheepCompanion from "./SheepCompanion";
 import { isXRMode } from "./xrMode";
 
 const ELEVENLABS_API_KEY = (import.meta as any).env?.VITE_ELEVENLABS_API_KEY || "";
@@ -24,8 +23,6 @@ const TRAILER_SRC = "/windtalkers_trailer.mp4";
 const BOOKS_URL = "https://www.amazon.com/s?k=monument+valley+book";
 const BROADCAST_CHANNEL = "elevenlabs-transcripts";
 const STORAGE_KEY = "elevenlabs-transcript-history";
-const SHEEP_MODEL_SRC = "/Meshy_AI_model_Animation_Walking_withSkin.glb";
-
 async function transcribeAudio(apiKey: string, audioBlob: Blob): Promise<string> {
   const form = new FormData();
   form.append("model_id", "scribe_v2");
@@ -304,19 +301,6 @@ export default function VoicePage() {
               title="Amazon Monument Valley books"
             />
           </div>
-        </div>
-
-        <div
-          enable-xr
-          className="sheep-companion"
-          style={
-            {
-              "--xr-back": "110",
-            } as React.CSSProperties
-          }
-        >
-          <div className="sheep-companion-label">Walking Companion</div>
-          <SheepCompanion src={SHEEP_MODEL_SRC} />
         </div>
 
         {micPanel}
