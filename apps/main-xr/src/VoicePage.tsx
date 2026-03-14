@@ -25,7 +25,7 @@ const BOOKS_WINDOW_NAME = "monument-valley-books";
 const BOOKS_URL = "https://www.amazon.com/s?k=monument+valley+book";
 const BROADCAST_CHANNEL = "elevenlabs-transcripts";
 const STORAGE_KEY = "elevenlabs-transcript-history";
-const SHEEP_MODEL_SRC = "/SheepBox.glb";
+const SHEEP_MODEL_SRC = "/Meshy_AI_model_Animation_Walking_withSkin.glb";
 
 async function transcribeAudio(apiKey: string, audioBlob: Blob): Promise<string> {
   const form = new FormData();
