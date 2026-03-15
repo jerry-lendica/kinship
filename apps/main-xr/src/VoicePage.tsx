@@ -50,10 +50,10 @@ const SCENES: SceneDefinition[] = [
     },
   },
   {
-    windowName: "amazon-books-scene",
+    windowName: "powells-books-scene",
     path: "/books",
-    title: "Amazon Books",
-    description: "Standalone Amazon browsing scene for Monument Valley books.",
+    title: "Powell's Books",
+    description: "Standalone Powell's browsing scene for Monument Valley books.",
     defaultSize: {
       width: 720,
       height: 900,
@@ -89,7 +89,7 @@ export default function VoicePage() {
           <h1 className="launcher-title">Kinship Scenes</h1>
           <p className="launcher-subtitle">
             {isXRMode
-              ? "Opening the Windtalkers trailer, Amazon books, and companion scenes as separate spatial experiences."
+              ? "Opening the Windtalkers trailer, Powell's books, and companion scenes as separate spatial experiences."
               : "Open each experience below. In XR, these launch as separate scenes."}
           </p>
         </div>
