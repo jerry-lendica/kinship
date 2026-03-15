@@ -2,7 +2,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { RealtimeAgent, RealtimeSession } from "@openai/agents-realtime";
 import SheepCompanion from "./SheepCompanion";
 
-const SHEEP_MODEL_SRC = "/Meshy_AI_model_Animation_Walking_withSkin.glb";
+const DEFAULT_SHEEP_MODEL_SRC = "/beigesheep.glb";
+const ACTIVE_SHEEP_MODEL_SRCS = ["/purplesheep.glb", "/yellowsheep.glb", "/greensheep.glb"] as const;
 const REALTIME_SESSION_URL = "/api/realtime/session";
 
 type CompanionState = "idle" | "connecting" | "listening" | "thinking" | "speaking";
@@ -29,8 +30,10 @@ Once you finish answering the first command, the conversation will end.
 export default function CompanionPage({ embedded = false }: CompanionPageProps) {
   const sessionRef = useRef<RealtimeSession | null>(null);
   const heardAssistantAudioRef = useRef(false);
+  const lastActiveSheepSrcRef = useRef<string | null>(null);
   const [state, setState] = useState<CompanionState>("idle");
   const [error, setError] = useState<string | null>(null);
+  const [sheepModelSrc, setSheepModelSrc] = useState(DEFAULT_SHEEP_MODEL_SRC);
 
   const agent = useMemo(
     () =>
@@ -45,6 +48,7 @@ export default function CompanionPage({ embedded = false }: CompanionPageProps) 
   const closeSession = useCallback(
     (nextState: CompanionState = "idle") => {
       heardAssistantAudioRef.current = false;
+      setSheepModelSrc(DEFAULT_SHEEP_MODEL_SRC);
 
       const currentSession = sessionRef.current;
       sessionRef.current = null;
@@ -60,6 +64,13 @@ export default function CompanionPage({ embedded = false }: CompanionPageProps) 
     },
     [],
   );
+
+  const pickActiveSheepModelSrc = useCallback(() => {
+    const candidates = ACTIVE_SHEEP_MODEL_SRCS.filter((src) => src !== lastActiveSheepSrcRef.current);
+    const nextSrc = candidates[Math.floor(Math.random() * candidates.length)] ?? ACTIVE_SHEEP_MODEL_SRCS[0];
+    lastActiveSheepSrcRef.current = nextSrc;
+    return nextSrc;
+  }, []);
 
   const fetchRealtimeClientSecret = useCallback(async () => {
     const response = await fetch(REALTIME_SESSION_URL, { method: "POST" });
@@ -90,6 +101,7 @@ export default function CompanionPage({ embedded = false }: CompanionPageProps) 
     setError(null);
     setState("connecting");
     heardAssistantAudioRef.current = false;
+    setSheepModelSrc(pickActiveSheepModelSrc());
 
     const session = new RealtimeSession(agent, {
       transport: "webrtc",
@@ -150,7 +162,7 @@ export default function CompanionPage({ embedded = false }: CompanionPageProps) 
       setError(message);
       closeSession("idle");
     }
-  }, [agent, closeSession, fetchRealtimeClientSecret]);
+  }, [agent, closeSession, fetchRealtimeClientSecret, pickActiveSheepModelSrc]);
 
   useEffect(() => {
     return () => {
@@ -179,7 +191,8 @@ export default function CompanionPage({ embedded = false }: CompanionPageProps) 
           {error && <p className="companion-error-text">{error}</p>}
         </div>
         <SheepCompanion
-          src={SHEEP_MODEL_SRC}
+          key={sheepModelSrc}
+          src={sheepModelSrc}
           onActivate={wakeCompanion}
           label={state === "idle" ? "Wake walking companion" : "Stop walking companion session"}
         />
