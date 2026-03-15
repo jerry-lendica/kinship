@@ -1,6 +1,13 @@
 import { useEffect } from "react";
 import { initScene } from "@webspatial/react-sdk";
 import { isXRMode } from "./xrMode";
+
+export type TranscriptEntry = {
+  id: string;
+  text: string;
+  ts: number;
+};
+
 type SceneDefinition = {
   windowName: string;
   path: string;
@@ -38,6 +45,16 @@ const SCENES: SceneDefinition[] = [
       depth: "0.9m",
     },
     sceneType: "volume",
+  },
+  {
+    windowName: "rezcar-scene",
+    path: "/rezcar",
+    title: "Rezcar",
+    description: "Image-only scene showing the Rezcar Monument Valley artwork.",
+    defaultSize: {
+      width: 1024,
+      height: 682,
+    },
   },
   {
     windowName: "windtalkers-trailer-scene",
